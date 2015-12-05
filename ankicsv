@@ -207,8 +207,6 @@ def parseVariables(lines):
 
     for line in lines:
 
-        print('line before replacing', line)
-
         for variable in variables:
             # Regex could match the variable name, so I decided to include
             # the most common variants of interpolation instead
@@ -216,16 +214,15 @@ def parseVariables(lines):
             line = line.replace('${ %s }' % variable, variables[variable])
             line = line.replace('${ %s}' % variable, variables[variable])
             line = line.replace('${%s }' % variable, variables[variable])
-
-        print('line after replacing: ', line)
+            line = line.replace('${  %s }' % variable, variables[variable])
+            line = line.replace('${  %s  }' % variable, variables[variable])
+            line = line.replace('${ %s  }' % variable, variables[variable])
 
         if line.strip().startswith('DEFINE'):
             declaration = list(map(lambda string: string.strip(), line.strip()[len("DEFINE"):].split('=')))
             if len(declaration) != 2:
                 raise Exception('Invalid number of arguments for a variable declaration:', len(declaration), 'for', declaration)
             variables[declaration[0]] = declaration[1]
-
-            print('Variable "' + declaration[0] + '" declared as "' + declaration[1] )
 
         else:
             res.append(line)
