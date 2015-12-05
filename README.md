@@ -28,13 +28,29 @@ How to write regular questions
 How to write multiple choice questions
 --------------------------------------
 
+Wrong answers are marked with a capital X,
+the right answer is marked with a capital V.
+Only one correct answer is allowed.
+
     ? What color is the sun?
     X Green
     X Blue
     V Yellow
 
+The fields are enumerated in Anki. So that
+in this case the result would be:
+
+    What color is the sun?
+
+    1) Green
+    2) Blue
+    3) Yellow
+
 How to write fill-in-the-blanks questions
 -----------------------------------------
+
+Fill-in-the-blanks questions use 3 underscores
+to surround the field to hide.
 
     The sun is ___yellow___.
 
