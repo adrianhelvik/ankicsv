@@ -2,6 +2,9 @@
 
 import sys
 import re
+import fnmatch
+import os
+import glob
 
 #
 # Functions
@@ -92,6 +95,8 @@ def findQuizes(lines):
             if answer is None:
                 raise Exception("No answer given", originalQuestion)
 
+            question += '<br>'
+
             # Add options to question
             for option in options:
                 question += '<br>' + option
@@ -151,6 +156,57 @@ def parseQuestions(questions):
 
     return result
 
+def process(lines):
+    # escape double quotes
+    lines = escapeDoubleQuotes(lines)
+
+    # Concatenate multiline blocks
+    lines = concatenateMultiline(lines)
+
+    # Trim lines
+    lines = map(lambda string: string.strip(), lines)
+
+    # Remove commented out lines
+    lines = list( filter(lambda string: isempty(string) or string[0] != '#', lines) )
+
+    # Find quizes
+    quizes = findQuizes(lines)
+
+    # Find question with blanks
+    blanks = findBlanks(lines)
+
+    # Find other questions
+    other = findOtherQuestions(lines)
+
+    # Concatenate all questions to one list
+    questions = {}
+    for d in [quizes, blanks, other]:
+        questions.update(d)
+
+    # Convert dictionaries into csv format
+    parsedLines = parseQuestions(questions)
+
+    return parsedLines
+
+def processFile(filename):
+    print('Sourcing anki from ', filename)
+
+    fileStream = open(filename, 'r')
+    lines = fileStream.readlines()
+    fileStream.close()
+
+    parsedLines = process(lines)
+
+    # Output file name should match input file name but with csv-suffix
+    outputFileName = filename[:len(filename) - len(suffix)] + '.csv';
+    print('Storing result to:', outputFileName)
+
+    outputFile = open( outputFileName, 'w' )
+
+    for line in parsedLines:
+        outputFile.write(line + '\n')
+
+
 #
 # Primary logic
 #
@@ -161,48 +217,6 @@ if len(sys.argv) < 2 or not sys.argv[1].endswith(suffix):
     print('Input file of type %s required' % suffix)
     exit(0)
 
-filename = sys.argv[1]
-
-# Read lines
-fileStream = open(filename, 'r')
-lines = fileStream.readlines()
-fileStream.close()
-
-# escape double quotes
-lines = escapeDoubleQuotes(lines)
-
-# Concatenate multiline blocks
-lines = concatenateMultiline(lines)
-
-# Trim lines
-lines = map(lambda string: string.strip(), lines)
-
-# Remove commented out lines
-lines = list( filter(lambda string: isempty(string) or string[0] != '#', lines) )
-
-# Find quizes
-quizes = findQuizes(lines)
-
-# Find question with blanks
-blanks = findBlanks(lines)
-
-# Find other questions
-other = findOtherQuestions(lines)
-
-# Concatenate all questions to one list
-questions = {}
-for d in [quizes, blanks, other]:
-    questions.update(d)
-
-# Convert dictionaries into csv format
-parsedLines = parseQuestions(questions)
-
-# Output file name should match input file name but with csv-suffix
-outputFileName = filename[:len(filename) - len(suffix)] + '.csv';
-print('Storing result to:', outputFileName)
-
-
-outputFile = open( outputFileName, 'w' )
-
-for line in parsedLines:
-    outputFile.write(line + '\n')
+for i in range(1, len(sys.argv)):
+    filename = sys.argv[i]
+    processFile(filename)
