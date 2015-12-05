@@ -136,6 +136,52 @@ def blankOut(string, indexes):
 def blankIndexes(string):
     return [ m.start() for m in re.finditer('___', string)]
 
+def generateSingleFromMultipleBlanks(originalQuestion, steps):
+    result = {}
+
+    for step1 in steps:
+        question = originalQuestion + '<br>'
+        answer = None
+
+        for step2 in steps:
+            if step1 == step2:
+                question += '<br>______'
+                answer = step1
+            else:
+                question += '<br>' + step1
+
+        result[question] = answer
+
+        print
+
+    return result
+
+def findMultipleBlanks(lines):
+
+    result = {}
+    started = False
+
+    question = None
+    options = []
+
+    for line in lines:
+        if isempty(line):
+
+            if not question is None:
+                result.update( generateSingleFromMultipleBlanks(question, options) )
+
+            question = None
+            continue
+
+        if line[0] == '%':
+            question = line[1:]
+            continue
+
+        if not question is None:
+            options.append(line)
+
+    return result
+
 def escapeDoubleQuotes(lines):
     newLines = []
     for line in lines:
@@ -175,12 +221,21 @@ def process(lines):
     # Find question with blanks
     blanks = findBlanks(lines)
 
+    # Find question with multiple blanks
+    multipleBlanks = findMultipleBlanks(lines)
+
+    for question in multipleBlanks:
+        print('-----------------')
+        print(question)
+        print('------- answer ------')
+        print(multipleBlanks[question])
+
     # Find other questions
     other = findOtherQuestions(lines)
 
     # Concatenate all questions to one list
     questions = {}
-    for d in [quizes, blanks, other]:
+    for d in [quizes, blanks, multipleBlanks, other]:
         questions.update(d)
 
     # Convert dictionaries into csv format

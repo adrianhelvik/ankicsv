@@ -27,8 +27,33 @@ How to write fill-in-the-blanks questions
 
     The sun is ___yellow___.
 
-How to write questions
-----------------------
+How to write multiple fill-in-the-blanks-questions in one go
+------------------------------------------------------------
+
+    % How do you make pan cakes?
+    You heat the oven
+    You mix stuff
+    You cook
+
+.. which will generate three questions:
+
+    How do you make pan cakes?
+    ______
+    You mix stuff
+    You cook
+
+    How do you make pan cakes?
+    You heat the oven
+    ______
+    You cook
+
+    How do you make pan cakes?
+    You heat the oven
+    You mix stuff
+    ______
+
+How to write regular questions
+------------------------------
 
     What color is the sun?
     Yellow
