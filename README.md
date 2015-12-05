@@ -38,12 +38,10 @@ How to write comments
 
     # Really important question
     # I have to remember this
-
     What is clorophyl?
     Plant goo
 
     # This is even more important
-
     ? What do you use for scale?
     V Bananas
     X Pears
