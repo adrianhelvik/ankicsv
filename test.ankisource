@@ -38,13 +38,13 @@ ja
 Hva er et systemkall?
 Et vanlig funksjonskall som kaller tjenester i OS-kjernen.
 
-% Hva skjer når en prosess utfører et systemkall?
-- 1) push parameters on stack
-- 2) call library code
-- 3) put system call number in register
-- 4) call kernel (TRAP, examine system call number, find handler, execute requested operation
-- 5) return to library and clean up (increase instruction pointer, remove parameters from stack)
-- 6) resume process
+Hva skjer når en prosess utfører et systemkall?
+| 1) push parameters on stack
+| 2) call library code
+| ___3) put system call number in register___
+| 4) call kernel (TRAP, examine system call number, find handler, execute requested operation
+| 5) return to library and clean up (increase instruction pointer, remove parameters from stack)
+| 6) resume process
 
 #
 #    1d Sidefeil
