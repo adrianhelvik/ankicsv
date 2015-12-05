@@ -57,24 +57,24 @@ to surround the field to hide.
 How to write multiple fill-in-the-blanks-questions in one go
 ------------------------------------------------------------
 
-    % How do you make pan cakes?
+    % How do you make pancakes?
     You heat the oven
     You mix stuff
     You cook
 
 .. which is equivalent to typing:
 
-    How do you make pan cakes?
+    How do you make pancakes?
     | ___You heat the oven___
     | You mix stuff
     | You cook
 
-    How do you make pan cakes?
+    How do you make pancakes?
     | You heat the oven
     | ___You mix stuff___
     | You cook
 
-    How do you make pan cakes?
+    How do you make pancakes?
     | You heat the oven
     | You mix stuff
     | ___You cook___
