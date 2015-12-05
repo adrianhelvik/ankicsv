@@ -78,20 +78,27 @@ def findQuizes(lines):
             options = []
             answer = None
 
-            # Go through answers for qestion
+            # Go through answers for question
             for j in range(i+1, len(lines)):
+                line = lines[j][1:].strip()
 
-                if isempty(lines[j]):
+                if isempty(line):
                     break
 
-                if isAnswer(lines[j]):
+                if not re.search( r'[0-9]', line[0] ):
+                    line = str(j-i) + ') ' + line
+
+                if isAnswer(lines[j].strip()):
 
                     if answer is not None:
                         raise Exception("Multiple answers given", originalQuestion)
 
-                    answer = lines[j][1:].strip()
+                    answer = line
 
-                options.append(lines[j][1:].strip())
+                    if not re.search( r'[0-9]', answer.strip()[0] ):
+                        answer = str(j-i) + ') ' + answer
+
+                options.append(line)
 
             if answer is None:
                 raise Exception("No answer given", originalQuestion)

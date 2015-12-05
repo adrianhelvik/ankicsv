@@ -10,11 +10,16 @@ DEFINE hello there = Howy ho!!!
 ${hello there} - This is awesome!
 Yes
 
-# Multiple choice
+# Multiple choice - without numbers (will be added)
 ? What color is the sun?
 X Blue
 X Green
 V Yellow
+
+# Multiple choice - with numbers
+? Am I awesome?
+X 1) No
+V 2) Yes
 
 # Multiple fill-in-the-blanks
 % How do you make coffee
