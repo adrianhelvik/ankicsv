@@ -62,6 +62,8 @@ How to write multiple fill-in-the-blanks-questions in one go
 How to write comments
 ---------------------
 
+A comment is simply a line starting with #.
+
     # Really important question
     # I have to remember this
     What is chlorophyll?
