@@ -306,8 +306,10 @@ def processFile(filename):
 
 suffix = '.ankisource'
 
-if len(sys.argv) < 2 or not sys.argv[1].endswith(suffix):
-    print('Input file of type %s required' % suffix)
+filenames = [ sys.argv[i] for i in range(1, len(sys.argv)) ]
+
+if len(filenames) < 1 or not all([ name.endswith(suffix) for name in filenames ]):
+    print('One or more input files with suffix %s required. No other suffixes allowed.' % suffix)
     exit(0)
 
 for i in range(1, len(sys.argv)):
