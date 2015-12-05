@@ -50,9 +50,9 @@ How to write comments
 How to split content over several lines
 ---------------------------------------
 
-This is a really cool question,
-| .. but it is way too long for one line.
-And this is the answer!
+    This is a really cool question,
+    | .. but it is way too long for one line.
+    And this is the answer!
 
 Why this program was written
 ============================
