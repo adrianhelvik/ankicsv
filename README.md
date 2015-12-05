@@ -6,6 +6,7 @@ How to use
 - Create one or more files with the `.ankisource` extension
 - Type `ankicsv <file names>`
 - The result is then stored as a csv files matching the names of the input files but with a `.csv` extension
+- Import `.csv`-files into Anki with *Allow HTML in fields* enabled.
 
 About the syntax
 ================
