@@ -206,14 +206,29 @@ def parseVariables(lines):
     variables = {}
 
     for line in lines:
+
+        print('line before replacing', line)
+
+        for variable in variables:
+            # Regex could match the variable name, so I decided to include
+            # the most common variants of interpolation instead
+            line = line.replace('${%s}' % variable, variables[variable])
+            line = line.replace('${ %s }' % variable, variables[variable])
+            line = line.replace('${ %s}' % variable, variables[variable])
+            line = line.replace('${%s }' % variable, variables[variable])
+
+        print('line after replacing: ', line)
+
         if line.strip().startswith('DEFINE'):
             declaration = list(map(lambda string: string.strip(), line.strip()[len("DEFINE"):].split('=')))
             if len(declaration) != 2:
                 raise Exception('Invalid number of arguments for a variable declaration:', len(declaration), 'for', declaration)
             variables[declaration[0]] = declaration[1]
-            continue
-        for variable in variables:
-            res.append(line.replace('${%s}' % variable, variables[variable]))
+
+            print('Variable "' + declaration[0] + '" declared as "' + declaration[1] )
+
+        else:
+            res.append(line)
 
     return res
 
@@ -221,11 +236,11 @@ def process(lines):
     # escape double quotes
     lines = escapeDoubleQuotes(lines)
 
-    # Variables
-    lines = parseVariables(lines)
-
     # Concatenate multiline blocks
     lines = concatenateMultiline(lines)
+
+    # Variables
+    lines = parseVariables(lines)
 
     # Trim lines
     lines = map(lambda string: string.strip(), lines)
