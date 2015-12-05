@@ -149,7 +149,7 @@ def generateSingleFromMultipleBlanks(originalQuestion, steps):
                 question += '<br>______'
                 answer = step1
             else:
-                question += '<br>' + step1
+                question += '<br>' + step2
 
         result[question] = answer
 
