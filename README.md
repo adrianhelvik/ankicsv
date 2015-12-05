@@ -5,7 +5,7 @@ How to use
 - `curl -L 'https://github.com/adrianhelvik/ankicsv/raw/master/ankicsv' > /usr/local/bin/ankicsv`
 - Create one or more files with the `.ankisource` extension
 - Type `ankicsv <file names>`
-- The result is then stored as a csv files matching the name of the input file but with a `.csv` extension
+- The result is then stored as a csv files matching the names of the input files but with a `.csv` extension
 
 About the syntax
 ================
