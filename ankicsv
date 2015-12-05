@@ -152,8 +152,6 @@ def generateSingleFromMultipleBlanks(originalQuestion, steps):
 
         result[question] = answer
 
-        print
-
     return result
 
 def findMultipleBlanks(lines):
@@ -223,12 +221,6 @@ def process(lines):
 
     # Find question with multiple blanks
     multipleBlanks = findMultipleBlanks(lines)
-
-    for question in multipleBlanks:
-        print('-----------------')
-        print(question)
-        print('------- answer ------')
-        print(multipleBlanks[question])
 
     # Find other questions
     other = findOtherQuestions(lines)
