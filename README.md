@@ -2,7 +2,7 @@ How to use
 ==========
 
 - Open terminal or another form of shell
-- Type *curl 'https://github.com/adrianhelvik/ankicsv/raw/master/ankicsv' /usr/local/bin/ankicsv*
+- Install Ankicsv with the command *curl -L 'https://github.com/adrianhelvik/ankicsv/raw/master/ankicsv' > /usr/local/bin/ankicsv*
 - Create one or more files with the *.ankisource* extension
 - Type *ankicsv some-file.ankisource*
 - The result is then stored as a csv file with the same name (*some-file.csv* in this example)
