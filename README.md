@@ -14,6 +14,10 @@ Separate questions are separated by empty lines.
 Make comments with #. Preceding linebreaks can be made
 insignificant by starting a line with | (pipe character).
 
+Single lines that are not fill in the blanks questions
+will be ignored. For me this is a convenience as I can
+create questions and add answers.
+
 How to write regular questions
 ------------------------------
 
