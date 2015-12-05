@@ -1,0 +1,196 @@
+#
+# Eksamen 2013
+#
+
+# Oppgave 1 Operativsystemer (ca. 30 %)
+#    Svar på følgende oppgaver om operativsystemer. Tegn gjerne figurer.
+#
+#    1a Definisjon og oppgaver
+#    Hva er et operativsystem, og hva er dets oppgaver?
+#
+
+Hva er et operativsystem?
+mellomlag mellom HW og brukeren.
+
+Hva er et operativsystems oppgaver?
+Det gir et grensesnitt for brukeren til maskinen.
+
+#
+#    1b Stakk
+#    Hva er en stakk, og hva brukes den til?
+#
+
+Hva er en stakk?
+En stakk er i denne konteksten et kontinuerlig minneområde
+| som brukes til å lagre variabler, parametre og registerverdier
+
+Er en stakk LIFO?
+Nei
+
+Er en stakk FIFO?
+ja
+
+#
+#    1c Systemkall
+#    Forklar hva et systemkall er og hva som skjer når en prosess gjør et slikt kall!
+#
+
+Hva er et systemkall?
+Et vanlig funksjonskall som kaller tjenester i OS-kjernen.
+
+% Hva skjer når en prosess utfører et systemkall?
+- 1) push parameters on stack
+- 2) call library code
+- 3) put system call number in register
+- 4) call kernel (TRAP, examine system call number, find handler, execute requested operation
+- 5) return to library and clean up (increase instruction pointer, remove parameters from stack)
+- 6) resume process
+
+#
+#    1d Sidefeil
+#    Forklar hva en sidefeil (“page fault”) er, og hvordan systemet håndterer denne situasjonen.
+#
+
+Hva er en sidefeil ("page fault")?
+En sidefeil en hendelse (interrupt sendt av hardware) som oppstår når et
+| program prøver å aksessere en side i minnet som er mappet inn i adresserommet,
+| men som ikke er lokalisert i det fysiske minnen (men da på disken).
+
+% Hvordan håndterer systemet en sidefeil ("page fault")?
+- 1) Hardware traps to the kernel saving program counter and process state information
+- 2) Save general registers and other volatile information
+- 3) OS discovers the page fault and determines which virtual page is requested
+- 4) OS checks if the virtual page is valid and if protection is consistent with access
+- 5) Select a page to be replaced
+- 6) Check if selected page frame is “dirty”, i.e., updated. If so, write back to disk, otherwise, just overwrite
+- 7) OS finds the disk address where the needed data is located and schedules a disk operation
+- 8) A disk interrupt is executed when disk I/O operation is finished, page tables are updated,
+- and the page frame is marked normal state
+- 9) Faulting instruction is backed up and the program counter is reset
+- 10) Faulting process is scheduled, and OS returns to the routine that made the trap to the kernel
+- 11) The registers and other volatile information are restored, and control is
+- returned to user space to continue execution as no page fault had occured.
+
+#
+#    1e Kontekstbytte
+#    Hva skjer ved et kontekstbytte (“context switch”)?
+#
+
+Hva er et kontekstbytte ("context switch")?
+En konteks-switch er operasjonen med å bytte fra en kjørende prosess (A) til en annen (B)
+
+% Hva skjer ved et kontekstbytte ("context switch")?
+- 1) prosess A stoppes
+- 2) tilstanden (registere, etc) til A lagres (på stakken, evt. PCB)
+- 3) tilstanden til prosess B gjenno- prettes (legge verdiene tilbake i registerene)
+- 4) prosess B gjenstartes fra punktet den stoppet sist ved at programtelleren er lest inn i EIP registeret.
+
+
+#
+#    1f Extents
+#    Forklar hva filsystemet bruker extents til og hvilke fordeler de har.
+#
+
+Hva er en inode?
+En inode er en blokk av fast størrelse i et unix-filsystem som inneholder metadata om en fil
+
+Hva er extents?
+
+Hva bruker filsystemet extents til?
+
+Hvilke fordeler har extents?
+
+#
+#    1g Byterekkefølge
+#    Forklar problemstillingen rundt byterekkefølge (“byte order”, endianness).
+#
+
+Hva er problemstillingen rundt byterekkefølge (“byte order”, endianness)?
+
+# Oppgave 2 Flervalgsoppgaver i operativsystemer (ca. 20 %)
+# I denne oppgaven skal du bare velge ETT alternativ uten å gi noen forklaring.
+
+# 2a Mikro-kjerne
+? Hva er en “mikro-kjerne” (micro kernel)?
+X en operativsystemkjerne med alle funksjoner linket inn i et enkelt objekt.
+X en liten funksjon som tar seg av prosessoren.
+V en operativsystemkjerne med minimal funksjonalitet hvor det meste av tjenestene implementeres som (brukerområde) tjenere.
+X et minimalt kjernelag som tar hånd om systemkallene på toppen av alle andre tjenester som operativsystemet tilbyr.
+X en operativsystemkjerne for å kjøre på mikro-enheter (som mobiltelefoner).
+
+# 2b Unntak
+? Hva er et unntak (“exception”)?
+X en tilstand for prosesser.
+V en måte å avbryte den kjørende prosessen på grunn av en synkron hendelse når en forhåndsdefinert hendelse oppstår (f.eks. systemkall).
+X en måte å avbryte den kjørende prosessen på grunn av en asynkron hendelse når en forhåndsdefinert hendelse oppstår (f.eks. ferdig diskoperasjon).
+X en regel i scheduleren for å kunne gjøre unntak for å prioritere viktigere prosesser.
+X en operasjon filsystemet kan gjøre for å ungå å skifte ut et element fra buffercachen.
+
+Hva er et unntak ("exception")?
+
+# 2c fork()
+? Funksjonen fork() ...
+V lager en ny prosess som er en kopi av prosessen som gjorde funksjonskallet.
+X forgreiner eksekveringen i et program og eksekverer hver grein en etter en.
+X eksekverer et helt nytt program angitt av paremeteren som gir navnet på en ny programfil.
+X tillater et program å dele minne med en annen prosess angitt av parameteren som gir pid’en til den andre prosessen.
+X oppretter flere køer i en scheduler.
+
+Hva gjør funksjonen fork?
+
+# 2d Absolutt adressering
+? Absolutt adressering er en måte å ...
+X adressere diskblokkene på disken direkte ved å angi et blokknummer.
+X adressere diskblokkene på disken gjennom pekere.
+V adressere minnet direkte ved å gi en hardware adresse.
+X adressere minnet relativt til en posisjon i programmet.
+X gi datakommunikasjonssystemet i operativsystemet en IP adresse uten a bruke oversettel- sesfunksjoner.
+
+# 2e Postbokser
+? Hva er en postboks (“mailbox”)?
+X et primitiv for å samle diskforespørsler.
+X en mekanisme for å gruppere alle prosesser med samme prioritet.
+V en mekanisme for å kommunisere mellom prosesser på maskinen.
+X et buffer for å holde en funksjons parametere mens riktig systemkall lokaliseres i systemkall- tabellen.
+X et signal for å si i fra til en prosess at en ekstern hendelse har oppstått.
+
+# 2f Inode
+? En inode er en metadatastruktur for å holde orden på...
+X indeksen til interrupt-tabellen.
+V datablokkene til en fil.
+X indeksen til systemkall-tabellen.
+X pakkene i datakommunikasjonssystemet. 5. minnet brukt for å indeksere åpne filer.
+
+# 2g Heap
+? I forbindelse med organisering av minnet til en prosess er en heap området som brukes til å lagre ...
+X datainstruksjoner.
+V dynamisk allokert minne.
+X operativsystemets kjernevariable.
+X programmets globale variable.
+X brukerprogrammets funksjonspekere. 6. de forskjellige trådenes egene stakker.
+
+#2h execve
+? Funksjonen execve ...
+X eksekverer et program i kjernens adresserom.
+X lager en ny prosess som er en eksakt kopi av prosessen som gjorde funksjonskallet.
+V eksekverer et helt nytt program angitt av parameteren som gir navnet på en ny programfil.
+X tillater et program å dele minne med en annen prosess angitt av parameteren som gir pid’en til den andre prosessen.
+X oppretter flere køer i en scheduler.
+
+# 2i Avbrytbar schedulering
+? Avbrytbar (“preemptive”) schedulering er en mekanisme som ...
+V kan avbryte den kjørende prosessen hvis høyere prioritets prosesser venter i schedulerings- køen.
+X kan avbryte den kjørende prosessen hvis lavere prioritets prosesser venter i schedulerings- køen.
+X passer på at den kjørende prosessen kan kjøre ferdig uansett prioritet. passer på at alle prosesser får like lang tid på prosessoren.
+X er ment for å schedulere prosesser på heterogene multi-prosessorer.
+X er ment å skille mellom prosessorer i kjernen og i brukerområdet.
+
+# 2j Shortest seek-time first
+? Diskscheduleringsalgoritmen korteste søk først (“shortest seek-time first”) ...
+X søker til nærmeste blokk med hensyn til korteste rotasjonsforsinkelse.
+X er rettferdig med tanke på responstid.
+X gir mer søking enn SCAN algoritmen.
+X garanterer best mulig gjenbruk av diskdata i minnet.
+V søker til nærmeste neste forespurte datablokk med hensyn til distanse (i antall sylindere å flytte disk hodet).
+X gir mer søking enn FCFS algoritmen.
+

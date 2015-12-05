@@ -1,0 +1,208 @@
+#!/usr/local/env python3
+
+import sys
+import re
+
+#
+# Functions
+#
+
+def isempty(string):
+    return len(string) == 0
+
+def startsQuiz(string):
+    return not isempty(string) and string[0] == '?'
+
+def parseQuestion(string):
+    if string[0] in ['?', '%', 'V', 'X']:
+        return string[1:].strip()
+    return string.strip()
+
+def concatenateMultiline(lines):
+
+    newLines = []
+
+    for line in lines:
+        if isempty(line) or line[0] != '|':
+            newLines.append(line.strip())
+
+        else:
+            newLines[-1] = newLines[-1] + '<br>' + line[1:].strip()
+
+    return newLines
+
+def isAnswer(string):
+    return not isempty(string) and string[0] == 'V'
+
+def findOtherQuestions(lines):
+
+    lastEmpty = True
+    question = None
+
+    questions = {}
+
+    for line in lines:
+
+        if isempty(line):
+            lastEmpty = True
+            question = None
+            continue
+
+        elif lastEmpty and line[0] in ['?', '%']:
+            lastEmpty = False
+            question = None
+            continue
+
+        elif question is not None:
+            answer = line
+
+            questions[question] = answer
+
+        elif lastEmpty:
+            question = line
+
+
+    return questions
+
+def findQuizes(lines):
+    quizes = {}
+
+    for i in range(len(lines)):
+
+        if startsQuiz(lines[i]):
+            originalQuestion = question = parseQuestion( lines[i] )
+            options = []
+            answer = None
+
+            # Go through answers for qestion
+            for j in range(i+1, len(lines)):
+
+                if isempty(lines[j]):
+                    break
+
+                if isAnswer(lines[j]):
+
+                    if answer is not None:
+                        raise Exception("Multiple answers given", originalQuestion)
+
+                    answer = lines[j][1:].strip()
+
+                options.append(lines[j][1:].strip())
+
+            if answer is None:
+                raise Exception("No answer given", originalQuestion)
+
+            # Add options to question
+            for option in options:
+                question += '<br>' + option
+
+            quizes[question] = answer
+
+    return quizes
+
+def findBlanks(lines):
+
+    blanks = {}
+    delimiter = '___'
+
+    for line in lines:
+
+        indexes = [ index.start() for index in re.finditer(delimiter, line) ]
+
+        if not isempty(indexes):
+
+            question = blankOut(line, indexes)
+            answer = line[ indexes[0] + len(delimiter) : indexes[1] ]
+
+            blanks[question] = answer
+
+    return blanks
+
+
+def blankOut(string, indexes):
+    res = ''
+    for i in range(len(string)):
+        if i in range(indexes[0], indexes[1]):
+            res += '_'
+        else:
+            res += string[i]
+    return res
+
+def blankIndexes(string):
+    return [ m.start() for m in re.finditer('___', string)]
+
+def escapeDoubleQuotes(lines):
+    newLines = []
+    for line in lines:
+        newLines.append( line.replace('"', '""') )
+    return newLines
+
+def parseQuestions(questions):
+
+    result = []
+
+    for question in questions:
+        current = ''
+
+        current += '"' + question + '", '
+        current += '"' + questions[question] + '"'
+
+        result.append(current)
+
+    return result
+
+#
+# Primary logic
+#
+
+suffix = '.ankisource'
+
+if len(sys.argv) < 2 or not sys.argv[1].endswith(suffix):
+    print('Input file of type %s required' % suffix)
+    exit(0)
+
+filename = sys.argv[1]
+
+# Read lines
+fileStream = open(filename, 'r')
+lines = fileStream.readlines()
+fileStream.close()
+
+# escape double quotes
+lines = escapeDoubleQuotes(lines)
+
+# Concatenate multiline blocks
+lines = concatenateMultiline(lines)
+
+# Trim lines
+lines = map(lambda string: string.strip(), lines)
+
+# Remove commented out lines
+lines = list( filter(lambda string: isempty(string) or string[0] != '#', lines) )
+
+# Find quizes
+quizes = findQuizes(lines)
+
+# Find question with blanks
+blanks = findBlanks(lines)
+
+# Find other questions
+other = findOtherQuestions(lines)
+
+# Concatenate all questions to one list
+questions = {}
+for d in [quizes, blanks, other]:
+    questions.update(d)
+
+# Convert dictionaries into csv format
+parsedLines = parseQuestions(questions)
+
+# Output file name should match input file name but with csv-suffix
+outputFileName = filename[:len(filename) - len(suffix)] + '.csv';
+print('Storing result to:', outputFileName)
+
+
+outputFile = open( outputFileName, 'w' )
+
+for line in parsedLines:
+    outputFile.write(line + '\n')
