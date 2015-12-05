@@ -45,17 +45,17 @@ How to write multiple fill-in-the-blanks-questions in one go
 .. which is equivalent to typing:
 
     How do you make pan cakes?
-    ___You heat the oven___
+    | ___You heat the oven___
     | You mix stuff
     | You cook
 
     How do you make pan cakes?
-    You heat the oven
+    | You heat the oven
     | ___You mix stuff___
     | You cook
 
     How do you make pan cakes?
-    You heat the oven
+    | You heat the oven
     | You mix stuff
     | ___You cook___
 
