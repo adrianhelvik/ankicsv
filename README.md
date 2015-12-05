@@ -4,8 +4,8 @@ How to use
 - Open terminal or another form of shell
 - `curl -L 'https://github.com/adrianhelvik/ankicsv/raw/master/ankicsv' > /usr/local/bin/ankicsv`
 - Create one or more files with the `.ankisource` extension
-- Type `ankicsv some-file.ankisource`
-- The result is then stored as a csv file with the same name (`some-file.csv` in this example)
+- Type `ankicsv <file names>`
+- The result is then stored as a csv files matching the name of the input file but with a `.csv` extension
 
 About the syntax
 ================
