@@ -11,7 +11,14 @@ About the syntax
 ================
 The syntax for *.ankisource* files is pretty simple.
 Separate questions are separated by empty lines.
-Make comments with #.
+Make comments with #. Preceding linebreaks can be made
+insignificant by starting a line with | (pipe character).
+
+How to write regular questions
+------------------------------
+
+    What color is the sun?
+    Yellow
 
 
 How to write multiple choice questions
@@ -35,28 +42,22 @@ How to write multiple fill-in-the-blanks-questions in one go
     You mix stuff
     You cook
 
-.. which will generate three questions:
+.. which is equivalent to typing:
 
     How do you make pan cakes?
-    ______
-    You mix stuff
-    You cook
-
-    How do you make pan cakes?
-    You heat the oven
-    ______
-    You cook
+    ___You heat the oven___
+    | You mix stuff
+    | You cook
 
     How do you make pan cakes?
     You heat the oven
-    You mix stuff
-    ______
+    | ___You mix stuff___
+    | You cook
 
-How to write regular questions
-------------------------------
-
-    What color is the sun?
-    Yellow
+    How do you make pan cakes?
+    You heat the oven
+    | You mix stuff
+    | ___You cook___
 
 How to write comments
 ---------------------
