@@ -64,7 +64,7 @@ How to write comments
 
     # Really important question
     # I have to remember this
-    What is clorophyl?
+    What is chlorophyll?
     Plant goo
 
     # This is even more important
