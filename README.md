@@ -24,7 +24,6 @@ How to write regular questions
     What color is the sun?
     Yellow
 
-
 How to write multiple choice questions
 --------------------------------------
 
@@ -85,6 +84,17 @@ How to split content over several lines
     This is a really cool question..
     | but it is way too long for one line.
     And this is the answer!
+
+Variables
+---------
+
+    DEFINE some stuff = the right answer
+
+    What is ${some stuff} to this question? 1 + 1 = ___2___
+
+.. which is equivalent to
+
+    What is the right answer to this question? 1 + 1 = ___2___
 
 Why this program was written
 ============================

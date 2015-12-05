@@ -37,6 +37,7 @@ def concatenateMultiline(lines):
 def isAnswer(string):
     return not isempty(string) and string[0] == 'V'
 
+
 def findOtherQuestions(lines):
 
     lastEmpty = True
@@ -200,9 +201,28 @@ def parseQuestions(questions):
 
     return result
 
+def parseVariables(lines):
+    res = []
+    variables = {}
+
+    for line in lines:
+        if line.strip().startswith('DEFINE'):
+            declaration = list(map(lambda string: string.strip(), line.strip()[len("DEFINE"):].split('=')))
+            if len(declaration) != 2:
+                raise Exception('Invalid number of arguments for a variable declaration:', len(declaration), 'for', declaration)
+            variables[declaration[0]] = declaration[1]
+            continue
+        for variable in variables:
+            res.append(line.replace('${%s}' % variable, variables[variable]))
+
+    return res
+
 def process(lines):
     # escape double quotes
     lines = escapeDoubleQuotes(lines)
+
+    # Variables
+    lines = parseVariables(lines)
 
     # Concatenate multiline blocks
     lines = concatenateMultiline(lines)
@@ -267,3 +287,5 @@ if len(sys.argv) < 2 or not sys.argv[1].endswith(suffix):
 for i in range(1, len(sys.argv)):
     filename = sys.argv[i]
     processFile(filename)
+
+
