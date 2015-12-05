@@ -141,7 +141,7 @@ def generateSingleFromMultipleBlanks(originalQuestion, steps):
     result = {}
 
     for step1 in steps:
-        question = originalQuestion + '<br>'
+        question = str(originalQuestion + '<br>')
         answer = None
 
         for step2 in steps:
@@ -163,13 +163,17 @@ def findMultipleBlanks(lines):
     question = None
     options = []
 
-    for line in lines:
+    for i in range(len(lines)):
+        line = lines[i]
+
         if isempty(line):
 
             if not question is None:
-                result.update( generateSingleFromMultipleBlanks(question, options) )
+                newQuestions = generateSingleFromMultipleBlanks(question, options)
+                result.update( newQuestions )
 
             question = None
+            options = []
             continue
 
         if line[0] == '%':
@@ -230,6 +234,9 @@ def parseVariables(lines):
     return res
 
 def process(lines):
+
+    lines.append("")
+
     # escape double quotes
     lines = escapeDoubleQuotes(lines)
 
