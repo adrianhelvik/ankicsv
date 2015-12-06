@@ -212,6 +212,109 @@ def parseQuestions(questions):
 
     return result
 
+class Mixin:
+
+    def __init__(self, name, parameter, body):
+        self.name = name
+        self.parameter = parameter
+        self.body = body
+
+    def fromDefinition(string):
+
+        if not string.startswith('MIXIN'):
+            raise Exception('Tried to parse mixin from non-mixin line')
+
+        string = string[ len('MIXIN') : ].strip()
+        split = string.split('=')
+
+        if len(split) != 2:
+            raise Exception('Mixin must contain one and only one =')
+
+        head = split[0].strip()
+        body = split[1].strip()
+        name = head[:head.find('(')].strip()
+        parameter = head[head.find('(')+1:len(head)-1].strip()
+
+        return Mixin(name, parameter, body)
+
+    def parseCall(self, argument):
+        print('$$$$$$$$$$', self.body.replace('${%s}' % self.parameter, argument))
+        return self.body.replace('${%s}' % self.parameter, argument)
+
+    def parseLine(self, line):
+        while (line.find('@{%s}' % self.name) != -1):
+            line = self.parseFirstOccurrence(line)
+        return line
+
+    def findCall(self, line):
+        if line.find('@{%s}' % self.name) == -1:
+            raise Exception('Trying to parse non existant mixin call')
+
+        start = line.find('@{%s}' % self.name)
+        end = None
+
+        for i in range(start + len('@{%s}' % self.name), len(line)):
+            if line[i] == ')':
+                end = i+1
+                break
+
+        if end is None:
+            raise Exception('Found no end index for mixin call')
+
+        print('::::::::::::::::::::::::::::::', line[start:end])
+
+        return { 'start': start, 'end': end }
+
+    def parseFirstOccurrence(self, line):
+
+        indexes = self.findCall(line)
+
+        call = line[ indexes['start'] : indexes['end']+1 ]
+
+        argument = None
+
+        for i in range(indexes['start'], indexes['end']):
+            if line[i] == '}':
+                start = call.find('(') + 1
+                end = call.find(')')
+                argument = call[ start : end ]
+                print('FOUND::::::::::::', argument)
+                break
+
+        print('ARGUMENT::::::::::::', argument)
+
+        toReplaceCall = self.parseCall(argument)
+
+        print('------------------ ', toReplaceCall)
+
+        return line.replace(call, toReplaceCall)
+
+    def parseMixinsForLine(line, mixins):
+        for mixin in mixins:
+            line = mixins[mixin].parseLine(line)
+
+        return line
+
+# MIXIN some function ($hello) = Si $hello
+# @{some function}(Hello world)
+def parseMixins(lines):
+
+    res = []
+    mixins = {}
+
+    for line in lines:
+
+        line = Mixin.parseMixinsForLine(line.strip(), mixins)
+
+        if line.startswith('MIXIN'):
+            mixin = Mixin.fromDefinition( line )
+            mixins[ mixin.name ] = mixin
+
+        else:
+            res.append(line)
+
+    return res
+
 def parseVariables(lines):
     res = []
     variables = {}
@@ -249,6 +352,9 @@ def process(lines):
 
     # Concatenate multiline blocks
     lines = concatenateMultiline(lines)
+
+    # Mixins
+    lines = parseMixins(lines)
 
     # Variables
     lines = parseVariables(lines)

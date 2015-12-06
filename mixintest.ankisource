@@ -1,0 +1,6 @@
+
+MIXIN some test mixin(A parameter) = Hello world ${A parameter}
+
+
+My question @{some test mixin} (What is this???) @{some test mixin}(LOL wtf)
+An answer

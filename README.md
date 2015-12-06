@@ -113,6 +113,21 @@ Variables
 
     What is the right answer to this question? 1 + 1 = ___2___
 
+Mixins
+------
+
+Mixins are like variables except that they accept an argument
+
+    MIXIN true?(parameter) = Is it true that ${parameter}
+
+    @{true?}(the moon is blue)
+    No
+
+.. which is equal to
+
+    Is it true that the moon is blue?
+    No
+
 Why this program was written
 ============================
 
