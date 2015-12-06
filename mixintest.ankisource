@@ -1,6 +1,6 @@
 
-MIXIN some test mixin(A parameter) = Hello world ${A parameter}
+MIXIN some test mixin(A parameter, another parameter) = Hello world FIRST:${A parameter} SECOND${another parameter}
 
 
-My question @{some test mixin} (What is this???) @{some test mixin}(LOL wtf)
+My question @{some test mixin} (What is this???, this is cool) @{some test mixin}(LOL wtf, Hello there)
 An answer

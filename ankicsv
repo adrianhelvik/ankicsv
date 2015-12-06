@@ -26,11 +26,11 @@ def concatenateMultiline(lines):
     newLines = []
 
     for line in lines:
-        if isempty(line) or line[0] != '|':
-            newLines.append(line.strip())
+        if isempty(line.strip()) or line[0] != '|':
+            newLines.append(line)
 
         else:
-            newLines[-1] = newLines[-1] + '<br>' + line[1:].strip()
+            newLines[-1] = newLines[-1] + '<br>' + line[1:]
 
     return newLines
 
@@ -214,9 +214,9 @@ def parseQuestions(questions):
 
 class Mixin:
 
-    def __init__(self, name, parameter, body):
+    def __init__(self, name, parameters, body):
         self.name = name
-        self.parameter = parameter
+        self.parameters = parameters
         self.body = body
 
     def fromDefinition(string):
@@ -233,13 +233,20 @@ class Mixin:
         head = split[0].strip()
         body = split[1].strip()
         name = head[:head.find('(')].strip()
-        parameter = head[head.find('(')+1:len(head)-1].strip()
+        parameters = head[head.find('(')+1:len(head)-1].strip().split(',')
+        parameters = list(map(lambda parameter: parameter.strip(), parameters))
 
-        return Mixin(name, parameter, body)
+        return Mixin(name, parameters, body)
 
-    def parseCall(self, argument):
-        print('$$$$$$$$$$', self.body.replace('${%s}' % self.parameter, argument))
-        return self.body.replace('${%s}' % self.parameter, argument)
+    def parseCall(self, arguments):
+        if len(arguments) != len(self.parameters):
+            raise Exception('Parameter number for mixin "' + self.name + '" does not match length of given arguments: ' + str(arguments))
+        body = self.body
+
+        for i in range(len(self.parameters)):
+            body = body.replace('${%s}' % self.parameters[i], arguments[i])
+
+        return body
 
     def parseLine(self, line):
         while (line.find('@{%s}' % self.name) != -1):
@@ -261,8 +268,6 @@ class Mixin:
         if end is None:
             raise Exception('Found no end index for mixin call')
 
-        print('::::::::::::::::::::::::::::::', line[start:end])
-
         return { 'start': start, 'end': end }
 
     def parseFirstOccurrence(self, line):
@@ -271,23 +276,21 @@ class Mixin:
 
         call = line[ indexes['start'] : indexes['end']+1 ]
 
-        argument = None
+        arguments = []
 
         for i in range(indexes['start'], indexes['end']):
             if line[i] == '}':
                 start = call.find('(') + 1
                 end = call.find(')')
-                argument = call[ start : end ]
-                print('FOUND::::::::::::', argument)
+                arguments = call[ start : end ].split(',')
+                arguments = list( map(lambda argument: argument.strip(), arguments) )
                 break
 
-        print('ARGUMENT::::::::::::', argument)
+        toReplaceCall = self.parseCall(arguments)
 
-        toReplaceCall = self.parseCall(argument)
+        line = line.replace(call, toReplaceCall)
 
-        print('------------------ ', toReplaceCall)
-
-        return line.replace(call, toReplaceCall)
+        return line
 
     def parseMixinsForLine(line, mixins):
         for mixin in mixins:
@@ -333,9 +336,7 @@ def parseVariables(lines):
             line = line.replace('${ %s  }' % variable, variables[variable])
 
         if line.strip().startswith('DEFINE'):
-            declaration = list(map(lambda string: string.strip(), line.strip()[len("DEFINE"):].split('=')))
-            if len(declaration) != 2:
-                raise Exception('Invalid number of arguments for a variable declaration:', len(declaration), 'for', declaration)
+            declaration = list(map(lambda string: string.strip(), line.strip()[len("DEFINE"):].split('=', 1)))
             variables[declaration[0]] = declaration[1]
 
         else:
@@ -384,6 +385,9 @@ def process(lines):
 
     # Convert dictionaries into csv format
     parsedLines = parseQuestions(questions)
+
+    # Replace spaces with %nbps;
+    parsedLines = list(map(lambda string: string.replace(' ', '&nbsp;'), parsedLines))
 
     return parsedLines
 
