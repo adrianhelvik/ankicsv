@@ -355,7 +355,7 @@ def process(lines):
     lines = concatenateMultiline(lines)
 
     # Mixins
-    lines = parseMixins(lines)
+    # lines = parseMixins(lines)
 
     # Variables
     lines = parseVariables(lines)
