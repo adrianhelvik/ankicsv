@@ -10,6 +10,14 @@ import glob
 # Functions
 #
 
+def removeLastNewlines(string):
+    if len(string) == 0:
+        return string
+    if string[len(string)-1] == '\n':
+        return removeLastNewlines(string[:len(string)-1])
+    else:
+        return string
+
 def isempty(string):
     return len(string) == 0
 
@@ -27,10 +35,10 @@ def concatenateMultiline(lines):
 
     for line in lines:
         if isempty(line.strip()) or line.strip()[0] != '|':
-            newLines.append(line)
+            newLines.append(removeLastNewlines(line))
 
         else:
-            newLines[-1] = newLines[-1] + '<br>' + line[1:]
+            newLines[-1] = newLines[-1] + '<br>' + removeLastNewlines(line[1:])
 
     return newLines
 
@@ -344,9 +352,14 @@ def parseVariables(lines):
 
     return res
 
+def escapeCommas(lines):
+    return list(map(lambda line: line.replace(',', '\\,'), lines))
+
 def process(lines):
 
     lines.append("")
+
+    lines = escapeCommas(lines)
 
     # escape double quotes
     lines = escapeDoubleQuotes(lines)
@@ -387,7 +400,7 @@ def process(lines):
     parsedLines = parseQuestions(questions)
 
     # Replace spaces with %nbps;
-    parsedLines = list(map(lambda string: string.replace(' ', '&nbsp;'), parsedLines))
+    parsedLines = list(map(lambda string: string.replace(' ', ' '), parsedLines))
 
     return parsedLines
 
