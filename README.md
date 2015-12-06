@@ -118,14 +118,14 @@ Mixins
 
 Mixins are like variables except that they accept an argument
 
-    MIXIN true?(parameter) = Is it true that ${parameter}
+    MIXIN true?(parameter 1, paramater 2) = Is it true that either ${parameter 1} or ${parameter 2}?
 
-    @{true?}(the moon is blue)
+    @{true?}(the moon is blue, the sky is green)
     No
 
 .. which is equal to
 
-    Is it true that the moon is blue?
+    Is it true that either the moon is blue or the sky is green?
     No
 
 Why this program was written
