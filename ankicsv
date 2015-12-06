@@ -26,7 +26,7 @@ def concatenateMultiline(lines):
     newLines = []
 
     for line in lines:
-        if isempty(line.strip()) or line[0] != '|':
+        if isempty(line.strip()) or line.strip()[0] != '|':
             newLines.append(line)
 
         else:
@@ -355,7 +355,7 @@ def process(lines):
     lines = concatenateMultiline(lines)
 
     # Mixins
-    # lines = parseMixins(lines)
+    lines = parseMixins(lines)
 
     # Variables
     lines = parseVariables(lines)
